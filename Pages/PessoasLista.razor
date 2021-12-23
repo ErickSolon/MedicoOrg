@@ -1,0 +1,88 @@
+@page "/pessoas/list"
+
+<h3><label>Consultas agendadas</label></h3>
+
+<input @bind="nomeInput">
+<button type="submit" @onclick="FiltrarPesssoasId">Filtrar por Id</button>
+<button type="submit" @onclick="FiltrarPessoasNome">Filtrar por nome</button>
+<button type="submit" @onclick="FiltrarPessoasSobrenome">Filtrar por Sobrenome</button>
+<button type="submit" @onclick="FiltrarPessoasTipoConsulta">Filtrar por Tipo de consulta</button>
+<button type="submit" @onclick="ReiniciarLista">Reiniciar Lista</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Sobrenome</th>
+            <th scope="col">Idade</th>
+            <th scope="col">Tipo de consulta</th>
+            <th scope="col">Horário da consulta</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in pessoas)
+        {
+            <tr>
+                <th scope="row">@item.Id</th>
+                <td>@item.Nome</td>
+                <td>@item.Sobrenome</td>
+                <td>@item.Idade</td>
+                <td>@item.TipoConsulta</td>
+                <td>@item.HorarioConsulta.ToString("dd/MM/yyyy hh:mm")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<Pessoas> pessoas;
+    List<Pessoas> pessoasSobrenome;
+
+    List<Pessoas> pessoasLista => djPTDContext.Pessoas.ToList();
+
+    string nomeInput = string.Empty;
+
+    public void FiltrarPesssoasId()
+    {
+        if (!String.IsNullOrEmpty(nomeInput))
+        {
+            pessoas = djPTDContext.Pessoas.Where(x => x.Id == int.Parse(nomeInput)).ToList();
+        }
+    }
+
+    public void FiltrarPessoasNome()
+    {
+        if (!String.IsNullOrEmpty(nomeInput))
+        {
+            pessoas = djPTDContext.Pessoas.Where(x => x.Nome == nomeInput).ToList();
+        }
+    }
+
+    public void FiltrarPessoasSobrenome()
+    {
+        if (!String.IsNullOrEmpty(nomeInput))
+        {
+            pessoas = djPTDContext.Pessoas.Where(x => x.Sobrenome == nomeInput).ToList();
+        }
+    }
+
+    public void FiltrarPessoasTipoConsulta()
+    {
+        if (!String.IsNullOrEmpty(nomeInput))
+        {
+            pessoas = djPTDContext.Pessoas.Where(x => x.TipoConsulta == nomeInput).ToList();
+        }
+    }
+
+    public void ReiniciarLista()
+    {
+        pessoas = pessoasLista;
+    }
+
+    protected override void OnInitialized()
+    {
+        pessoas = pessoasLista;
+    }
+
+}
